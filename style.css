@@ -1,0 +1,31 @@
+nav {
+    display: flex;
+    justify-content: center;
+    background-color: black;
+    color: white;
+}
+#grid {
+    margin: 100px 0;
+    width: 100%;
+    height: auto;
+}
+.row {
+    display: flex;
+    justify-content: center;
+}
+.squares {
+    width: 50px;
+    height: 50px;
+    border: grey solid 1px;
+    margin: 2px;
+}
+.key-row {
+    display: flex;
+    justify-content: center;
+}
+button {
+    margin: 2px;
+    border-radius: 5px;
+    background-color: rgb(227, 224, 224);
+    padding: 20px 15px;
+}

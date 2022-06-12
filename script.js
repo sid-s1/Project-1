@@ -17,6 +17,8 @@ let blockNumber = 0;
 let gameComplete = false;
 let pressedEnter = false;
 let wordChecked = false;
+let found = false;
+let rowChanged = false;
 let nextStartingPoint = 0;
 let rowNumber = -1;
 
@@ -50,8 +52,28 @@ function wordTypeOut(event) {
             if (letterTyped === 'ENTER') {
                 checkWord(blockNumber);
             }
+            else if (letterTyped === 'DEL') {
+                notificationThree.textContent = '';
+                if (pressedEnter === true && found === false) {
+                    if (blockNumber !== 0) {
+                        allBlocks[blockNumber - 1].textContent = '';
+                        blockNumber--;
+                    }
+                }
+                else {
+                    if (pressedEnter === true && found === true) {
+                        notificationThree.textContent = 'You cannot delete that letter now!';
+                    }
+                    else {
+                        if (blockNumber !== 0) {
+                            allBlocks[blockNumber - 1].textContent = '';
+                            blockNumber--;
+                        }
+                    }
+                }
+            }
             else {
-                if (pressedEnter) {
+                if (wordChecked === true) {
                     notificationTwo.textContent = '';
                     allBlocks[blockNumber].textContent = letterTyped;
                     //letters pop up in each square with an animation
@@ -69,9 +91,22 @@ function wordTypeOut(event) {
             notificationOne.textContent = '';
             switch (letterTyped) {
                 case 'DEL':
-                    if (blockNumber !== 0) {
-                        allBlocks[blockNumber - 1].textContent = '';
-                        blockNumber--;
+                    if (pressedEnter === true && found === false) {
+                        if (blockNumber !== 0) {
+                            allBlocks[blockNumber - 1].textContent = '';
+                            blockNumber--;
+                        }
+                    }
+                    else {
+                        if (pressedEnter === true && found === true) {
+                            notificationThree.textContent = 'You cannot delete that letter now!';
+                        }
+                        else {
+                            if (blockNumber !== 0) {
+                                allBlocks[blockNumber - 1].textContent = '';
+                                blockNumber--;
+                            }
+                        }
                     }
                     break;
                 case 'ENTER':
@@ -80,6 +115,7 @@ function wordTypeOut(event) {
                 default:
                     notificationTwo.textContent = '';
                     allBlocks[blockNumber].textContent = letterTyped;
+                    console.log(blockNumber);
                     //letters pop up in each square with an animation
                     blockNumber++;
                     break;
@@ -99,15 +135,40 @@ function checkWord(num) {
         case 25:
         case 30:
             let userInput = '';
-            for (let index = nextStartingPoint; index < num; index++) {
+            pressedEnter = true;
+            for (let index = 0 + nextStartingPoint; index < num; index++) {
                 userInput = userInput + allBlocks[index].textContent;
             }
-            pressedEnter = true;
-            nextStartingPoint = num;
-            rowNumber++;
+            if (wordInDict(userInput.toLowerCase())) {
+                rowNumber++;
+                nextStartingPoint += 5;
+            }
+            // else {
+            //     nextStartingPoint -= 5;
+            // }
+            // switch (rowNumber) {
+            //     case 0:
+            //         nextStartingPoint = 5;
+            //         break;
+            //     case 1:
+            //         nextStartingPoint = 10;
+            //         break;
+            //     case 2:
+            //         nextStartingPoint = 15;
+            //         break;
+            //     case 3:
+            //         nextStartingPoint = 20;
+            //         break;
+            //     case 4:
+            //         nextStartingPoint = 25;
+            //         break;
+            //     default:
+            //         break;
+            // }
             matchWord(userInput, rowNumber);
             break;
         default:
+            wordChecked = false;
             notificationTwo.textContent = 'Please enter 5 letters before pressing enter!';
             break;
     }
@@ -120,11 +181,22 @@ function checkWord(num) {
     //mark which one is yellow and which one is green based on word list
 }
 
+function wordInDict(word) {
+    if (dictionary.includes(word)) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 function matchWord(word, rowNumber) {
+    console.log(word);
     let lettersFound = 0;
     word = word.toLowerCase();
-    const found = dictionary.includes(word);
+    found = wordInDict(word);
     if (found) {
+        rowChanged = true;
         notificationThree.textContent = '';
         for (const letter of word) {
             if (random.indexOf(letter) === word.indexOf(letter)) {
@@ -154,7 +226,10 @@ function matchWord(word, rowNumber) {
         }
     }
     else {
+        found = false;
+        rowChanged = false;
         notificationThree.textContent = 'Word not in dictionary!';
+        console.log('row no - ' + rowNumber);
     }
     // blockNumber++;
 }

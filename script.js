@@ -34,14 +34,25 @@ for (const button of allButtons) {
     button.addEventListener('click', wordFound);
 }
 
+//maybe as keys are pressed on the physical keyboard, the relevant virtual keyboard key also highlights out of the screen
+
+document.addEventListener('keyup', wordFound);
+
 function wordFound(event) {
+    //for gameComplete = true, add some affects
+    //also prevent re-entering
     if (gameComplete === false) {
-        wordTypeOut(event);
+        if (event.type === 'click') {
+            wordTypeOut(event.target.textContent);
+        }
+        if (event.type === 'keyup' && event.key.length === 1 && event.key.match(/[a-z]/i) || event.key === 'Enter' || event.key === 'Backspace') {
+            wordTypeOut(event.key);
+        }
     }
 }
 
-function wordTypeOut(event) {
-    const letterTyped = event.target.textContent.toUpperCase();
+function wordTypeOut(key) {
+    const letterTyped = key.toUpperCase();
     switch (blockNumber) {
         case 5:
         case 10:
@@ -52,7 +63,7 @@ function wordTypeOut(event) {
             if (letterTyped === 'ENTER') {
                 checkWord(blockNumber);
             }
-            else if (letterTyped === 'DEL') {
+            else if (letterTyped === 'DEL' || letterTyped === 'BACKSPACE') {
                 notificationThree.textContent = '';
                 if (pressedEnter === true && found === false) {
                     if (blockNumber !== 0 && blockNumber >= nextStartingPoint + 1) {
@@ -73,7 +84,7 @@ function wordTypeOut(event) {
                 }
             }
             else {
-                if (wordChecked === true) {
+                if (wordChecked === true && blockNumber >= nextStartingPoint && blockNumber <= nextStartingPoint + 4) {
                     notificationTwo.textContent = '';
                     allBlocks[blockNumber].textContent = letterTyped;
                     //letters pop up in each square with an animation
@@ -91,6 +102,7 @@ function wordTypeOut(event) {
             notificationOne.textContent = '';
             switch (letterTyped) {
                 case 'DEL':
+                case 'BACKSPACE':
                     if (pressedEnter === true && found === false) {
                         if (blockNumber !== 0 && blockNumber >= nextStartingPoint + 1) {
                             allBlocks[blockNumber - 1].textContent = '';
@@ -113,12 +125,13 @@ function wordTypeOut(event) {
                     checkWord(blockNumber);
                     break;
                 default:
-                    notificationTwo.textContent = '';
-                    allBlocks[blockNumber].textContent = letterTyped;
-                    console.log(blockNumber);
-                    //letters pop up in each square with an animation
-                    blockNumber++;
-                    break;
+                    if (blockNumber >= nextStartingPoint && blockNumber <= nextStartingPoint + 4) {
+                        notificationTwo.textContent = '';
+                        allBlocks[blockNumber].textContent = letterTyped;
+                        //letters pop up in each square with an animation
+                        blockNumber++;
+                        break;
+                    }
             }
             break;
     }

@@ -52,22 +52,10 @@ function wordTypeOut(event) {
             if (letterTyped === 'ENTER') {
                 checkWord(blockNumber);
             }
-            //this is when i am on the end of the word
-            //in this delete else-if, i need to 
-            //add a condition that only lets it delete
-            //if the word is not locked in yet
-            //the word lock-in works for each individual case
-            //because of pressedEnter
-            //but it does not work for prior cases
-            //so i need a way to store the pressedEnter
-            //boolean for prior cases
-            //but using array has been confusing in this case
-            //because of how many areas that variable is 
-            //edited in. so i need to perhaps use an object?
             else if (letterTyped === 'DEL') {
                 notificationThree.textContent = '';
                 if (pressedEnter === true && found === false) {
-                    if (blockNumber !== 0) {
+                    if (blockNumber !== 0 && blockNumber >= nextStartingPoint + 1) {
                         allBlocks[blockNumber - 1].textContent = '';
                         blockNumber--;
                     }
@@ -77,7 +65,7 @@ function wordTypeOut(event) {
                         notificationThree.textContent = 'You cannot delete that letter now!';
                     }
                     else {
-                        if (blockNumber !== 0) {
+                        if (blockNumber !== 0 && blockNumber >= nextStartingPoint + 1) {
                             allBlocks[blockNumber - 1].textContent = '';
                             blockNumber--;
                         }
@@ -104,7 +92,7 @@ function wordTypeOut(event) {
             switch (letterTyped) {
                 case 'DEL':
                     if (pressedEnter === true && found === false) {
-                        if (blockNumber !== 0) {
+                        if (blockNumber !== 0 && blockNumber >= nextStartingPoint + 1) {
                             allBlocks[blockNumber - 1].textContent = '';
                             blockNumber--;
                         }
@@ -114,7 +102,7 @@ function wordTypeOut(event) {
                             notificationThree.textContent = 'You cannot delete that letter now!';
                         }
                         else {
-                            if (blockNumber !== 0) {
+                            if (blockNumber !== 0 && blockNumber >= nextStartingPoint + 1) {
                                 allBlocks[blockNumber - 1].textContent = '';
                                 blockNumber--;
                             }

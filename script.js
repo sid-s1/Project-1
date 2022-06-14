@@ -318,16 +318,20 @@ function matchWord(word, rowNumber) {
                 if (nextIndexInRandom !== -1) {
                     if (nextIndexInRandom === firstIndexInUserInput) {
                         rows[rowNumber].children[firstIndexInUserInput].style.backgroundColor = 'green';
+                        lettersFound++;
                     }
                     if (nextIndexInRandom === nextIndexInUserInput) {
                         rows[rowNumber].children[nextIndexInUserInput].style.backgroundColor = 'green';
+                        lettersFound++;
                     }
                 }
                 if (firstIndexInRandom === nextIndexInUserInput) {
                     rows[rowNumber].children[nextIndexInUserInput].style.backgroundColor = 'green';
+                    lettersFound++;
                 }
                 if (firstIndexInRandom === firstIndexInUserInput && firstIndexInRandom !== -1) {
                     rows[rowNumber].children[firstIndexInUserInput].style.backgroundColor = 'green';
+                    lettersFound++;
                 }
                 //add an or to this if to check if nextindexinuser equals firstindexinrandom                }
                 if (nextIndexInRandom !== nextIndexInUserInput && nextIndexInRandom !== -1) {
@@ -411,7 +415,7 @@ function matchWord(word, rowNumber) {
             //         // allBlocks[nextStartingPoint + word.indexOf(letter)].style.backgroundColor = 'yellow';
             //     }
             // }
-            if (lettersFound === 5) {
+            if (lettersFound >= 5) {
                 gameComplete = true;
                 //bring a prompt up that says 'legend, well done'
                 //some fireworks? might need jquery

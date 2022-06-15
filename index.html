@@ -6,14 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Worlde Time!</title>
     <link rel="stylesheet" href="./style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Fascinate&display=swap" rel="stylesheet">
-</head>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet"></head>
 <body>
     <nav>
         <!-- maybe add a settings wheel 
         to change contrast -->
         <h1>Wordle Time!</h1>
     </nav>
+    <section id='score'>
+        <h3>Your score </h3>
+        <h4>0</h4>
+    </section>
+    <section id='restart'>
+        <button>RESTART GAME</button>
+    </section>
+    <div id='processing'>
+        <img id='img-2' src="" alt="">
+    </div>
     <section id='grid'>
         <div class='row' class='row-1'>
             <div class='squares'></div>
@@ -58,9 +67,14 @@
             <div class='squares'></div>
         </div>
     </section>
-    <p id='notification-1'></p>
-    <p id='notification-2'></p>
-    <p id='notification-3'></p>
+    <section id='gifs'>
+        <img id='img-1' src="" alt="">
+    </section>
+    <section id = 'notifications'>
+        <p id='notification-1'></p>
+        <p id='notification-2'></p>
+        <p id='notification-3'></p>
+    </section>
     <section id='keyboard'>
         <div class='key-row'>
             <button>q</button>

@@ -1,19 +1,20 @@
 //element declarations
-const allButtons = document.querySelectorAll('button');
+const allButtons = document.querySelectorAll('#keyboard button');
 const allBlocks = document.querySelectorAll('.squares');
-// const row1 = document.querySelectorAll('.row-1');
-// const row2 = document.querySelectorAll('.row-2');
-// const row3 = document.querySelectorAll('.row-3');
-// const row4 = document.querySelectorAll('.row-4');
-// const row5 = document.querySelectorAll('.row-5');
-// const row6 = document.querySelectorAll('.row-6');
+const mainHeading = document.querySelector('h1');
+const scoreSection = document.querySelector('#score');
+const scoreHeading = document.querySelector('h4');
+const restartButton = document.querySelector('#restart button');
 const rows = document.querySelectorAll('.row');
+const img = document.querySelector('#img-1');
+const img2 = document.querySelector('#img-2');
 const notificationOne = document.querySelector('#notification-1');
 const notificationTwo = document.querySelector('#notification-2');
 const notificationThree = document.querySelector('#notification-3');
 
 //variable declarations
 let blockNumber = 0;
+let score = 0;
 let gameComplete = false;
 let pressedEnter = false;
 let wordChecked = false;
@@ -21,46 +22,14 @@ let found = false;
 let rowChanged = false;
 let nextStartingPoint = 0;
 let rowNumber = -1;
-const wordParametersObj = {
-    letter1: {},
-    letter2: {},
-    letter3: {},
-    letter4: {},
-    letter5: {}
-};
-const randParametersObj = {
-};
-const arrOfLetters = [];
 
 //dictionary of 5 letter words
 const dictionary = ["aback", "abase", "abate", "abbey", "abbot", "abhor", "abide", "abled", "abode", "abort", "about", "above", "abuse", "abyss", "acorn", "acrid", "actor", "acute", "adage", "adapt", "adept", "admin", "admit", "adobe", "adopt", "adore", "adorn", "adult", "affix", "afire", "afoot", "afoul", "after", "again", "agape", "agate", "agent", "agile", "aging", "aglow", "agony", "agora", "agree", "ahead", "aider", "aisle", "alarm", "album", "alert", "algae", "alibi", "alien", "align", "alike", "alive", "allay", "alley", "allot", "allow", "alloy", "aloft", "alone", "along", "aloof", "aloud", "alpha", "altar", "alter", "amass", "amaze", "amber", "amble", "amend", "amiss", "amity", "among", "ample", "amply", "amuse", "angel", "anger", "angle", "angry", "angst", "anime", "ankle", "annex", "annoy", "annul", "anode", "antic", "anvil", "aorta", "apart", "aphid", "aping", "apnea", "apple", "apply", "apron", "aptly", "arbor", "ardor", "arena", "argue", "arise", "armor", "aroma", "arose", "array", "arrow", "arson", "artsy", "ascot", "ashen", "aside", "askew", "assay", "asset", "atoll", "atone", "attic", "audio", "audit", "augur", "aunty", "avail", "avert", "avian", "avoid", "await", "awake", "award", "aware", "awash", "awful", "awoke", "axial", "axiom", "axion", "azure", "bacon", "badge", "badly", "bagel", "baggy", "baker", "baler", "balmy", "banal", "banjo", "barge", "baron", "basal", "basic", "basil", "basin", "basis", "baste", "batch", "bathe", "baton", "batty", "bawdy", "bayou", "beach", "beady", "beard", "beast", "beech", "beefy", "befit", "began", "begat", "beget", "begin", "begun", "being", "belch", "belie", "belle", "belly", "below", "bench", "beret", "berry", "berth", "beset", "betel", "bevel", "bezel", "bible", "bicep", "biddy", "bigot", "bilge", "billy", "binge", "bingo", "biome", "birch", "birth", "bison", "bitty", "black", "blade", "blame", "bland", "blank", "blare", "blast", "blaze", "bleak", "bleat", "bleed", "bleep", "blend", "bless", "blimp", "blind", "blink", "bliss", "blitz", "bloat", "block", "bloke", "blond", "blood", "bloom", "blown", "bluer", "bluff", "blunt", "blurb", "blurt", "blush", "board", "boast", "bobby", "boney", "bongo", "bonus", "booby", "boost", "booth", "booty", "booze", "boozy", "borax", "borne", "bosom", "bossy", "botch", "bough", "boule", "bound", "bowel", "boxer", "brace", "braid", "brain", "brake", "brand", "brash", "brass", "brave", "bravo", "brawl", "brawn", "bread", "break", "breed", "briar", "bribe", "brick", "bride", "brief", "brine", "bring", "brink", "briny", "brisk", "broad", "broil", "broke", "brood", "brook", "broom", "broth", "brown", "brunt", "brush", "brute", "buddy", "budge", "buggy", "bugle", "build", "built", "bulge", "bulky", "bully", "bunch", "bunny", "burly", "burnt", "burst", "bused", "bushy", "butch", "butte", "buxom", "buyer", "bylaw", "cabal", "cabby", "cabin", "cable", "cacao", "cache", "cacti", "caddy", "cadet", "cagey", "cairn", "camel", "cameo", "canal", "candy", "canny", "canoe", "canon", "caper", "caput", "carat", "cargo", "carol", "carry", "carve", "caste", "catch", "cater", "catty", "caulk", "cause", "cavil", "cease", "cedar", "cello", "chafe", "chaff", "chain", "chair", "chalk", "champ", "chant", "chaos", "chard", "charm", "chart", "chase", "chasm", "cheap", "cheat", "check", "cheek", "cheer", "chess", "chest", "chick", "chide", "chief", "child", "chili", "chill", "chime", "china", "chirp", "chock", "choir", "choke", "chord", "chore", "chose", "chuck", "chump", "chunk", "churn", "chute", "cider", "cigar", "cinch", "circa", "civic", "civil", "clack", "claim", "clamp", "clang", "clank", "clash", "clasp", "class", "clean", "clear", "cleat", "cleft", "clerk", "click", "cliff", "climb", "cling", "clink", "cloak", "clock", "clone", "close", "cloth", "cloud", "clout", "clove", "clown", "cluck", "clued", "clump", "clung", "coach", "coast", "cobra", "cocoa", "colon", "color", "comet", "comfy", "comic", "comma", "conch", "condo", "conic", "copse", "coral", "corer", "corny", "couch", "cough", "could", "count", "coupe", "court", "coven", "cover", "covet", "covey", "cower", "coyly", "crack", "craft", "cramp", "crane", "crank", "crash", "crass", "crate", "crave", "crawl", "craze", "crazy", "creak", "cream", "credo", "creed", "creek", "creep", "creme", "crepe", "crept", "cress", "crest", "crick", "cried", "crier", "crime", "crimp", "crisp", "croak", "crock", "crone", "crony", "crook", "cross", "croup", "crowd", "crown", "crude", "cruel", "crumb", "crump", "crush", "crust", "crypt", "cubic", "cumin", "curio", "curly", "curry", "curse", "curve", "curvy", "cutie", "cyber", "cycle", "cynic", "daddy", "daily", "dairy", "daisy", "dally", "dance", "dandy", "datum", "daunt", "dealt", "death", "debar", "debit", "debug", "debut", "decal", "decay", "decor", "decoy", "decry", "defer", "deign", "deity", "delay", "delta", "delve", "demon", "demur", "denim", "dense", "depot", "depth", "derby", "deter", "detox", "deuce", "devil", "diary", "dicey", "digit", "dilly", "dimly", "diner", "dingo", "dingy", "diode", "dirge", "dirty", "disco", "ditch", "ditto", "ditty", "diver", "dizzy", "dodge", "dodgy", "dogma", "doing", "dolly", "donor", "donut", "dopey", "doubt", "dough", "dowdy", "dowel", "downy", "dowry", "dozen", "draft", "drain", "drake", "drama", "drank", "drape", "drawl", "drawn", "dread", "dream", "dress", "dried", "drier", "drift", "drill", "drink", "drive", "droit", "droll", "drone", "drool", "droop", "dross", "drove", "drown", "druid", "drunk", "dryer", "dryly", "duchy", "dully", "dummy", "dumpy", "dunce", "dusky", "dusty", "dutch", "duvet", "dwarf", "dwell", "dwelt", "dying", "eager", "eagle", "early", "earth", "easel", "eaten", "eater", "ebony", "eclat", "edict", "edify", "eerie", "egret", "eight", "eject", "eking", "elate", "elbow", "elder", "elect", "elegy", "elfin", "elide", "elite", "elope", "elude", "email", "embed", "ember", "emcee", "empty", "enact", "endow", "enema", "enemy", "enjoy", "ennui", "ensue", "enter", "entry", "envoy", "epoch", "epoxy", "equal", "equip", "erase", "erect", "erode", "error", "erupt", "essay", "ester", "ether", "ethic", "ethos", "etude", "evade", "event", "every", "evict", "evoke", "exact", "exalt", "excel", "exert", "exile", "exist", "expel", "extol", "extra", "exult", "eying", "fable", "facet", "faint", "fairy", "faith", "false", "fancy", "fanny", "farce", "fatal", "fatty", "fault", "fauna", "favor", "feast", "fecal", "feign", "fella", "felon", "femme", "femur", "fence", "feral", "ferry", "fetal", "fetch", "fetid", "fetus", "fever", "fewer", "fiber", "fibre", "ficus", "field", "fiend", "fiery", "fifth", "fifty", "fight", "filer", "filet", "filly", "filmy", "filth", "final", "finch", "finer", "first", "fishy", "fixer", "fizzy", "fjord", "flack", "flail", "flair", "flake", "flaky", "flame", "flank", "flare", "flash", "flask", "fleck", "fleet", "flesh", "flick", "flier", "fling", "flint", "flirt", "float", "flock", "flood", "floor", "flora", "floss", "flour", "flout", "flown", "fluff", "fluid", "fluke", "flume", "flung", "flunk", "flush", "flute", "flyer", "foamy", "focal", "focus", "foggy", "foist", "folio", "folly", "foray", "force", "forge", "forgo", "forte", "forth", "forty", "forum", "found", "foyer", "frail", "frame", "frank", "fraud", "freak", "freed", "freer", "fresh", "friar", "fried", "frill", "frisk", "fritz", "frock", "frond", "front", "frost", "froth", "frown", "froze", "fruit", "fudge", "fugue", "fully", "fungi", "funky", "funny", "furor", "furry", "fussy", "fuzzy", "gaffe", "gaily", "gamer", "gamma", "gamut", "gassy", "gaudy", "gauge", "gaunt", "gauze", "gavel", "gawky", "gayer", "gayly", "gazer", "gecko", "geeky", "geese", "genie", "genre", "ghost", "ghoul", "giant", "giddy", "gipsy", "girly", "girth", "given", "giver", "glade", "gland", "glare", "glass", "glaze", "gleam", "glean", "glide", "glint", "gloat", "globe", "gloom", "glory", "gloss", "glove", "glyph", "gnash", "gnome", "godly", "going", "golem", "golly", "gonad", "goner", "goody", "gooey", "goofy", "goose", "gorge", "gouge", "gourd", "grace", "grade", "graft", "grail", "grain", "grand", "grant", "grape", "graph", "grasp", "grass", "grate", "grave", "gravy", "graze", "great", "greed", "green", "greet", "grief", "grill", "grime", "grimy", "grind", "gripe", "groan", "groin", "groom", "grope", "gross", "group", "grout", "grove", "growl", "grown", "gruel", "gruff", "grunt", "guard", "guava", "guess", "guest", "guide", "guild", "guile", "guilt", "guise", "gulch", "gully", "gumbo", "gummy", "guppy", "gusto", "gusty", "gypsy", "habit", "hairy", "halve", "handy", "happy", "hardy", "harem", "harpy", "harry", "harsh", "haste", "hasty", "hatch", "hater", "haunt", "haute", "haven", "havoc", "hazel", "heady", "heard", "heart", "heath", "heave", "heavy", "hedge", "hefty", "heist", "helix", "hello", "hence", "heron", "hilly", "hinge", "hippo", "hippy", "hitch", "hoard", "hobby", "hoist", "holly", "homer", "honey", "honor", "horde", "horny", "horse", "hotel", "hotly", "hound", "house", "hovel", "hover", "howdy", "human", "humid", "humor", "humph", "humus", "hunch", "hunky", "hurry", "husky", "hussy", "hutch", "hydro", "hyena", "hymen", "hyper", "icily", "icing", "ideal", "idiom", "idiot", "idler", "idyll", "igloo", "iliac", "image", "imbue", "impel", "imply", "inane", "inbox", "incur", "index", "inept", "inert", "infer", "ingot", "inlay", "inlet", "inner", "input", "inter", "intro", "ionic", "irate", "irony", "islet", "issue", "itchy", "ivory", "jaunt", "jazzy", "jelly", "jerky", "jetty", "jewel", "jiffy", "joint", "joist", "joker", "jolly", "joust", "judge", "juice", "juicy", "jumbo", "jumpy", "junta", "junto", "juror", "kappa", "karma", "kayak", "kebab", "khaki", "kinky", "kiosk", "kitty", "knack", "knave", "knead", "kneed", "kneel", "knelt", "knife", "knock", "knoll", "known", "koala", "krill", "label", "labor", "laden", "ladle", "lager", "lance", "lanky", "lapel", "lapse", "large", "larva", "lasso", "latch", "later", "lathe", "latte", "laugh", "layer", "leach", "leafy", "leaky", "leant", "leapt", "learn", "lease", "leash", "least", "leave", "ledge", "leech", "leery", "lefty", "legal", "leggy", "lemon", "lemur", "leper", "level", "lever", "libel", "liege", "light", "liken", "lilac", "limbo", "limit", "linen", "liner", "lingo", "lipid", "lithe", "liver", "livid", "llama", "loamy", "loath", "lobby", "local", "locus", "lodge", "lofty", "logic", "login", "loopy", "loose", "lorry", "loser", "louse", "lousy", "lover", "lower", "lowly", "loyal", "lucid", "lucky", "lumen", "lumpy", "lunar", "lunch", "lunge", "lupus", "lurch", "lurid", "lusty", "lying", "lymph", "lynch", "lyric", "macaw", "macho", "macro", "madam", "madly", "mafia", "magic", "magma", "maize", "major", "maker", "mambo", "mamma", "mammy", "manga", "mange", "mango", "mangy", "mania", "manic", "manly", "manor", "maple", "march", "marry", "marsh", "mason", "masse", "match", "matey", "mauve", "maxim", "maybe", "mayor", "mealy", "meant", "meaty", "mecca", "medal", "media", "medic", "melee", "melon", "mercy", "merge", "merit", "merry", "metal", "meter", "metro", "micro", "midge", "midst", "might", "milky", "mimic", "mince", "miner", "minim", "minor", "minty", "minus", "mirth", "miser", "missy", "mocha", "modal", "model", "modem", "mogul", "moist", "molar", "moldy", "money", "month", "moody", "moose", "moral", "moron", "morph", "mossy", "motel", "motif", "motor", "motto", "moult", "mound", "mount", "mourn", "mouse", "mouth", "mover", "movie", "mower", "mucky", "mucus", "muddy", "mulch", "mummy", "munch", "mural", "murky", "mushy", "music", "musky", "musty", "myrrh", "nadir", "naive", "nanny", "nasal", "nasty", "natal", "naval", "navel", "needy", "neigh", "nerdy", "nerve", "never", "newer", "newly", "nicer", "niche", "niece", "night", "ninja", "ninny", "ninth", "noble", "nobly", "noise", "noisy", "nomad", "noose", "north", "nosey", "notch", "novel", "nudge", "nurse", "nutty", "nylon", "nymph", "oaken", "obese", "occur", "ocean", "octal", "octet", "odder", "oddly", "offal", "offer", "often", "olden", "older", "olive", "ombre", "omega", "onion", "onset", "opera", "opine", "opium", "optic", "orbit", "order", "organ", "other", "otter", "ought", "ounce", "outdo", "outer", "outgo", "ovary", "ovate", "overt", "ovine", "ovoid", "owing", "owner", "oxide", "ozone", "paddy", "pagan", "paint", "paler", "palsy", "panel", "panic", "pansy", "papal", "paper", "parer", "parka", "parry", "parse", "party", "pasta", "paste", "pasty", "patch", "patio", "patsy", "patty", "pause", "payee", "payer", "peace", "peach", "pearl", "pecan", "pedal", "penal", "pence", "penne", "penny", "perch", "peril", "perky", "pesky", "pesto", "petal", "petty", "phase", "phone", "phony", "photo", "piano", "picky", "piece", "piety", "piggy", "pilot", "pinch", "piney", "pinky", "pinto", "piper", "pique", "pitch", "pithy", "pivot", "pixel", "pixie", "pizza", "place", "plaid", "plain", "plait", "plane", "plank", "plant", "plate", "plaza", "plead", "pleat", "plied", "plier", "pluck", "plumb", "plume", "plump", "plunk", "plush", "poesy", "point", "poise", "poker", "polar", "polka", "polyp", "pooch", "poppy", "porch", "poser", "posit", "posse", "pouch", "pound", "pouty", "power", "prank", "prawn", "preen", "press", "price", "prick", "pride", "pried", "prime", "primo", "print", "prior", "prism", "privy", "prize", "probe", "prone", "prong", "proof", "prose", "proud", "prove", "prowl", "proxy", "prude", "prune", "psalm", "pubic", "pudgy", "puffy", "pulpy", "pulse", "punch", "pupal", "pupil", "puppy", "puree", "purer", "purge", "purse", "pushy", "putty", "pygmy", "quack", "quail", "quake", "qualm", "quark", "quart", "quash", "quasi", "queen", "queer", "quell", "query", "quest", "queue", "quick", "quiet", "quill", "quilt", "quirk", "quite", "quota", "quote", "quoth", "rabbi", "rabid", "racer", "radar", "radii", "radio", "rainy", "raise", "rajah", "rally", "ralph", "ramen", "ranch", "randy", "range", "rapid", "rarer", "raspy", "ratio", "ratty", "raven", "rayon", "razor", "reach", "react", "ready", "realm", "rearm", "rebar", "rebel", "rebus", "rebut", "recap", "recur", "recut", "reedy", "refer", "refit", "regal", "rehab", "reign", "relax", "relay", "relic", "remit", "renal", "renew", "repay", "repel", "reply", "rerun", "reset", "resin", "retch", "retro", "retry", "reuse", "revel", "revue", "rhino", "rhyme", "rider", "ridge", "rifle", "right", "rigid", "rigor", "rinse", "ripen", "riper", "risen", "riser", "risky", "rival", "river", "rivet", "roach", "roast", "robin", "robot", "rocky", "rodeo", "roger", "rogue", "roomy", "roost", "rotor", "rouge", "rough", "round", "rouse", "route", "rover", "rowdy", "rower", "royal", "ruddy", "ruder", "rugby", "ruler", "rumba", "rumor", "rupee", "rural", "rusty", "sadly", "safer", "saint", "salad", "sally", "salon", "salsa", "salty", "salve", "salvo", "sandy", "saner", "sappy", "sassy", "satin", "satyr", "sauce", "saucy", "sauna", "saute", "savor", "savoy", "savvy", "scald", "scale", "scalp", "scaly", "scamp", "scant", "scare", "scarf", "scary", "scene", "scent", "scion", "scoff", "scold", "scone", "scoop", "scope", "score", "scorn", "scour", "scout", "scowl", "scram", "scrap", "scree", "screw", "scrub", "scrum", "scuba", "sedan", "seedy", "segue", "seize", "semen", "sense", "sepia", "serif", "serum", "serve", "setup", "seven", "sever", "sewer", "shack", "shade", "shady", "shaft", "shake", "shaky", "shale", "shall", "shalt", "shame", "shank", "shape", "shard", "share", "shark", "sharp", "shave", "shawl", "shear", "sheen", "sheep", "sheer", "sheet", "sheik", "shelf", "shell", "shied", "shift", "shine", "shiny", "shire", "shirk", "shirt", "shoal", "shock", "shone", "shook", "shoot", "shore", "shorn", "short", "shout", "shove", "shown", "showy", "shrew", "shrub", "shrug", "shuck", "shunt", "shush", "shyly", "siege", "sieve", "sight", "sigma", "silky", "silly", "since", "sinew", "singe", "siren", "sissy", "sixth", "sixty", "skate", "skier", "skiff", "skill", "skimp", "skirt", "skulk", "skull", "skunk", "slack", "slain", "slang", "slant", "slash", "slate", "slave", "sleek", "sleep", "sleet", "slept", "slice", "slick", "slide", "slime", "slimy", "sling", "slink", "sloop", "slope", "slosh", "sloth", "slump", "slung", "slunk", "slurp", "slush", "slyly", "smack", "small", "smart", "smash", "smear", "smell", "smelt", "smile", "smirk", "smite", "smith", "smock", "smoke", "smoky", "smote", "snack", "snail", "snake", "snaky", "snare", "snarl", "sneak", "sneer", "snide", "sniff", "snipe", "snoop", "snore", "snort", "snout", "snowy", "snuck", "snuff", "soapy", "sober", "soggy", "solar", "solid", "solve", "sonar", "sonic", "sooth", "sooty", "sorry", "sound", "south", "sower", "space", "spade", "spank", "spare", "spark", "spasm", "spawn", "speak", "spear", "speck", "speed", "spell", "spelt", "spend", "spent", "sperm", "spice", "spicy", "spied", "spiel", "spike", "spiky", "spill", "spilt", "spine", "spiny", "spire", "spite", "splat", "split", "spoil", "spoke", "spoof", "spook", "spool", "spoon", "spore", "sport", "spout", "spray", "spree", "sprig", "spunk", "spurn", "spurt", "squad", "squat", "squib", "stack", "staff", "stage", "staid", "stain", "stair", "stake", "stale", "stalk", "stall", "stamp", "stand", "stank", "stare", "stark", "start", "stash", "state", "stave", "stead", "steak", "steal", "steam", "steed", "steel", "steep", "steer", "stein", "stern", "stick", "stiff", "still", "stilt", "sting", "stink", "stint", "stock", "stoic", "stoke", "stole", "stomp", "stone", "stony", "stood", "stool", "stoop", "store", "stork", "storm", "story", "stout", "stove", "strap", "straw", "stray", "strip", "strut", "stuck", "study", "stuff", "stump", "stung", "stunk", "stunt", "style", "suave", "sugar", "suing", "suite", "sulky", "sully", "sumac", "sunny", "super", "surer", "surge", "surly", "sushi", "swami", "swamp", "swarm", "swash", "swath", "swear", "sweat", "sweep", "sweet", "swell", "swept", "swift", "swill", "swine", "swing", "swirl", "swish", "swoon", "swoop", "sword", "swore", "sworn", "swung", "synod", "syrup", "tabby", "table", "taboo", "tacit", "tacky", "taffy", "taint", "taken", "taker", "tally", "talon", "tamer", "tango", "tangy", "taper", "tapir", "tardy", "tarot", "taste", "tasty", "tatty", "taunt", "tawny", "teach", "teary", "tease", "teddy", "teeth", "tempo", "tenet", "tenor", "tense", "tenth", "tepee", "tepid", "terra", "terse", "testy", "thank", "theft", "their", "theme", "there", "these", "theta", "thick", "thief", "thigh", "thing", "think", "third", "thong", "thorn", "those", "three", "threw", "throb", "throw", "thrum", "thumb", "thump", "thyme", "tiara", "tibia", "tidal", "tiger", "tight", "tilde", "timer", "timid", "tipsy", "titan", "tithe", "title", "toast", "today", "toddy", "token", "tonal", "tonga", "tonic", "tooth", "topaz", "topic", "torch", "torso", "torus", "total", "totem", "touch", "tough", "towel", "tower", "toxic", "toxin", "trace", "track", "tract", "trade", "trail", "train", "trait", "tramp", "trash", "trawl", "tread", "treat", "trend", "triad", "trial", "tribe", "trice", "trick", "tried", "tripe", "trite", "troll", "troop", "trope", "trout", "trove", "truce", "truck", "truer", "truly", "trump", "trunk", "truss", "trust", "truth", "tryst", "tubal", "tuber", "tulip", "tulle", "tumor", "tunic", "turbo", "tutor", "twang", "tweak", "tweed", "tweet", "twice", "twine", "twirl", "twist", "twixt", "tying", "udder", "ulcer", "ultra", "umbra", "uncle", "uncut", "under", "undid", "undue", "unfed", "unfit", "unify", "union", "unite", "unity", "unlit", "unmet", "unset", "untie", "until", "unwed", "unzip", "upper", "upset", "urban", "urine", "usage", "usher", "using", "usual", "usurp", "utile", "utter", "vague", "valet", "valid", "valor", "value", "valve", "vapid", "vapor", "vault", "vaunt", "vegan", "venom", "venue", "verge", "verse", "verso", "verve", "vicar", "video", "vigil", "vigor", "villa", "vinyl", "viola", "viper", "viral", "virus", "visit", "visor", "vista", "vital", "vivid", "vixen", "vocal", "vodka", "vogue", "voice", "voila", "vomit", "voter", "vouch", "vowel", "vying", "wacky", "wafer", "wager", "wagon", "waist", "waive", "waltz", "warty", "waste", "watch", "water", "waver", "waxen", "weary", "weave", "wedge", "weedy", "weigh", "weird", "welch", "welsh", "wench", "whack", "whale", "wharf", "wheat", "wheel", "whelp", "where", "which", "whiff", "while", "whine", "whiny", "whirl", "whisk", "white", "whole", "whoop", "whose", "widen", "wider", "widow", "width", "wield", "wight", "willy", "wimpy", "wince", "winch", "windy", "wiser", "wispy", "witch", "witty", "woken", "woman", "women", "woody", "wooer", "wooly", "woozy", "wordy", "world", "worry", "worse", "worst", "worth", "would", "wound", "woven", "wrack", "wrath", "wreak", "wreck", "wrest", "wring", "wrist", "write", "wrong", "wrote", "wrung", "wryly", "yacht", "yearn", "yeast", "yield", "young", "youth", "zebra", "zesty", "zonal"];
 
 //selecting a random word from dictionary
-const random = dictionary[Math.floor(Math.random() * dictionary.length)];
+let random = dictionary[Math.floor(Math.random() * dictionary.length)];
 console.log(random);
-// const random = 'holly';
-for (const letter of random) {
-    arrOfLetters.push(letter);
-}
-// function randomParameters() {
-//     for (const letter of random) {
-//         let position = random.indexOf(letter);
-//         let count = 0;
-//         while (position !== -1) {
-//             count++;
-//             if (count > 1) {
-//                 randParametersObj[letter][String(count)] = position;
-//             }
-//             else {
-//                 randParametersObj[letter] = position;
-//             }
-//             position = random.indexOf(letter, position + 1);
-//         }
-//     }
-//     console.log(randParametersObj);
-// }
-
-// randomParameters();
+// let random = 'baggy';
 
 for (const button of allButtons) {
     button.addEventListener('click', wordFound);
@@ -71,6 +40,49 @@ for (const button of allButtons) {
 
 document.addEventListener('keyup', wordFound);
 document.addEventListener('keyup', checkFullSquares);
+restartButton.addEventListener('click', reset);
+
+function reset() {
+    setTimeout(function () {
+        mainHeading.style.opacity = '0';
+        mainHeading.style.transitionDuration = '1s';
+        mainHeading.style.transitionTimingFunction = 'ease-in';
+        document.body.style.backgroundImage = 'none';
+        document.body.style.transitionDuration = '1s';
+        document.body.style.transitionTimingFunction = 'ease-in';
+        for (const button of allButtons) {
+            button.style.backgroundColor = '';
+        }
+        for (const block of allBlocks) {
+            block.style.backgroundColor = '';
+            block.textContent = '';
+            block.style.border = 'grey solid 1px';
+            block.style.color = 'white';
+        }
+    }, 1000);
+    setTimeout(function () {
+        mainHeading.textContent = 'Wordle Time!';
+        mainHeading.style.color = 'white';
+        mainHeading.style.opacity = '1';
+        mainHeading.style.transitionDuration = '1s';
+        mainHeading.style.transitionTimingFunction = 'ease-in';
+        scoreSection.style.fontSize = '1em';
+    }, 2000);
+    document.body.style.backgroundImage = '';
+    checkFullSquares();
+    imageFadeOut(img);
+    imageFadeOut(img2);
+    blockNumber = 0;
+    gameComplete = false;
+    pressedEnter = false;
+    wordChecked = false;
+    found = false;
+    rowChanged = false;
+    nextStartingPoint = 0;
+    rowNumber = -1;
+    random = dictionary[Math.floor(Math.random() * dictionary.length)];
+    console.log(random);
+}
 
 function checkFullSquares() {
     for (const block of allBlocks) {
@@ -94,7 +106,6 @@ function wordInDict(word) {
 
 function wordFound(event) {
     //for gameComplete = true, add some affects
-    //also prevent re-entering
     if (gameComplete === false) {
         if (event.type === 'click') {
             wordTypeOut(event.target.textContent);
@@ -105,7 +116,62 @@ function wordFound(event) {
     }
 }
 
+
+//inspiration from An Object Is A's Medium Article on making images pop in and pop out
+function imageFadeIn(image) {
+    image.style.transitionDuration = '0.2s';
+    image.style.transform = 'scale(1.5)';
+
+    setTimeout(function () {
+        image.style.transitionDuration = '0.07s';
+        image.style.transform = 'scale(1)';
+    }, 200);
+}
+
+function imageFadeOut(image) {
+    image.style.transitionDuration = '0.2s';
+    image.style.transform = 'scale(1.5)';
+
+    setTimeout(function () {
+        image.style.transitionDuration = '0.07s';
+        image.style.transform = 'scale(0)';
+        image.src = '';
+    }, 200);
+
+}
+
+function changeButtonColor(button, color) {
+    if (color === 'green' || color === 'grey') {
+        button.style.color = 'white';
+    }
+    else {
+        button.style.color = 'black';
+    }
+    if (button.style.backgroundColor !== 'green') {
+        if (color === 'grey') {
+            if (button.style.backgroundColor !== 'yellow') {
+                button.style.backgroundColor = 'grey';
+            }
+        }
+        else {
+            button.style.backgroundColor = color;
+        }
+    }
+}
+
+function makeUserWorry(rowN) {
+    if (rowN >= 3) {
+        if (gameComplete !== true) {
+            img2.src = 'https://acegif.com/wp-content/uploads/2020/09/thinking-emoji.gif';
+            imageFadeIn(img2);
+        }
+    }
+}
+
 function wordTypeOut(key) {
+    notificationOne.textContent = '';
+    notificationTwo.textContent = '';
+    notificationThree.textContent = '';
     const letterTyped = key.toUpperCase();
     switch (blockNumber) {
         case 5:
@@ -116,29 +182,47 @@ function wordTypeOut(key) {
         case 30:
             if (letterTyped === 'ENTER') {
                 checkWord(blockNumber);
+                makeUserWorry(rowNumber);
             }
             else if (letterTyped === 'DEL' || letterTyped === 'BACKSPACE') {
-                notificationThree.textContent = '';
                 if (pressedEnter === true && found === false) {
                     if (blockNumber !== 0 && blockNumber >= nextStartingPoint + 1) {
+                        imageFadeOut(img);
+                        imageFadeOut(img2);
                         allBlocks[blockNumber - 1].textContent = '';
                         blockNumber--;
                     }
                 }
                 else {
                     if (pressedEnter === true && found === true) {
+                        img.src = 'https://c.tenor.com/UmJ1-ld1susAAAAC/no-no-no-not-today.gif';
+                        imageFadeIn(img);
                         notificationThree.textContent = 'You cannot delete that letter now!';
                     }
                     else {
                         if (blockNumber !== 0 && blockNumber >= nextStartingPoint + 1) {
+                            imageFadeOut(img);
+                            imageFadeOut(img2);
                             allBlocks[blockNumber - 1].textContent = '';
                             blockNumber--;
+                        }
+                        else if (blockNumber === 0) {
+                            img.src = 'https://media3.giphy.com/media/h1tRPPnEZwvBFhh4nC/200.gif';
+                            imageFadeIn(img);
+                            notificationThree.textContent = 'Do something!';
+                        }
+                        else {
+                            img.src = 'https://c.tenor.com/UmJ1-ld1susAAAAC/no-no-no-not-today.gif';
+                            imageFadeIn(img);
+                            notificationThree.textContent = 'You cannot delete that letter now!';
                         }
                     }
                 }
             }
             else {
                 if (wordChecked === true && blockNumber >= nextStartingPoint && blockNumber <= nextStartingPoint + 4) {
+                    imageFadeOut(img);
+                    imageFadeOut(img2);
                     notificationTwo.textContent = '';
                     allBlocks[blockNumber].textContent = letterTyped;
                     //letters pop up in each square with an animation
@@ -154,23 +238,41 @@ function wordTypeOut(key) {
         default:
             pressedEnter = false;
             notificationOne.textContent = '';
+            notificationTwo.textContent = '';
+            notificationThree.textContent = '';
             switch (letterTyped) {
                 case 'DEL':
                 case 'BACKSPACE':
                     if (pressedEnter === true && found === false) {
                         if (blockNumber !== 0 && blockNumber >= nextStartingPoint + 1) {
+                            imageFadeOut(img);
+                            imageFadeOut(img2);
                             allBlocks[blockNumber - 1].textContent = '';
                             blockNumber--;
                         }
                     }
                     else {
                         if (pressedEnter === true && found === true) {
+                            img.src = 'https://c.tenor.com/UmJ1-ld1susAAAAC/no-no-no-not-today.gif';
+                            imageFadeIn(img);
                             notificationThree.textContent = 'You cannot delete that letter now!';
                         }
                         else {
                             if (blockNumber !== 0 && blockNumber >= nextStartingPoint + 1) {
+                                imageFadeOut(img);
+                                imageFadeOut(img2);
                                 allBlocks[blockNumber - 1].textContent = '';
                                 blockNumber--;
+                            }
+                            else if (blockNumber === 0) {
+                                img.src = 'https://media3.giphy.com/media/h1tRPPnEZwvBFhh4nC/200.gif';
+                                imageFadeIn(img);
+                                notificationThree.textContent = 'Do something!';
+                            }
+                            else {
+                                img.src = 'https://c.tenor.com/UmJ1-ld1susAAAAC/no-no-no-not-today.gif';
+                                imageFadeIn(img);
+                                notificationThree.textContent = 'You cannot delete that letter now!';
                             }
                         }
                     }
@@ -179,6 +281,11 @@ function wordTypeOut(key) {
                     checkWord(blockNumber);
                     break;
                 default:
+                    imageFadeOut(img);
+                    imageFadeOut(img2);
+                    notificationOne.textContent = '';
+                    notificationTwo.textContent = '';
+                    notificationThree.textContent = '';
                     if (blockNumber >= nextStartingPoint && blockNumber <= nextStartingPoint + 4) {
                         notificationTwo.textContent = '';
                         allBlocks[blockNumber].textContent = letterTyped;
@@ -194,7 +301,6 @@ function wordTypeOut(key) {
 function checkWord(num) {
     wordChecked = true;
     switch (num) {
-        //this means that user has entered 5 letters before pressing enter
         case 5:
         case 10:
         case 15:
@@ -210,7 +316,6 @@ function checkWord(num) {
                 rowNumber++;
                 nextStartingPoint += 5;
             }
-            wordLettersInArr(userInput);
             matchWord(userInput, rowNumber);
             break;
         default:
@@ -218,220 +323,166 @@ function checkWord(num) {
             notificationTwo.textContent = 'Please enter 5 letters before pressing enter!';
             break;
     }
-
-
-    //create function to check if 5 letters have been filled
-    //then if enter has been pressed
-    //if enter has been pressed without entering all 5 letters
-    //if not, check 5 letters (add one at a time transition check later)
-    //mark which one is yellow and which one is green based on word list
-}
-
-function wordParameters(word, rowN) {
-    const wordParametersObj = {
-        letter1: {},
-        letter2: {},
-        letter3: {},
-        letter4: {},
-        letter5: {}
-    };
-    word = word.toLowerCase();
-    let letterAddOn = 1;
-    for (const letter of word) {
-        let position = random.indexOf(letter);
-        let count = 0;
-        while (position !== -1) {
-            count++;
-            let key = 'letter' + letterAddOn;
-            let index = 'index' + count;
-            wordParametersObj[key]['occurences'] = count;
-            wordParametersObj[key][index] = position;
-            position = random.indexOf(letter, position + 1);
-        }
-        letterAddOn++;
-    }
-    // console.log(wordParametersObj);
-    for (const key in wordParametersObj) {
-        switch (key) {
-            case 'letter1':
-                for (const key2 in key) {
-                    switch (key2) {
-                        case 'occurence1':
-                            if (key2.occurence1)
-                                break;
-                        case 'occurence2':
-                            break;
-                        case 'occurence3':
-                            break;
-                        case 'occurence4':
-                            break;
-                        case 'occurence5':
-                            break;
-                    }
-                }
-                break;
-            case 'letter2':
-                break;
-            case 'letter3':
-                break;
-            case 'letter4':
-                break;
-            case 'letter5':
-                break;
-        }
-    }
-
-
-
-    // matchWord(word, rowN);
-}
-const wordLetters = [];
-
-function wordLettersInArr(word) {
-    for (const letter of word) {
-        wordLetters.push(letter);
-    }
 }
 
 
 function matchWord(word, rowNumber) {
-    // console.log(word);
     let lettersFound = 0;
     word = word.toLowerCase();
     found = wordInDict(word);
     if (found) {
         rowChanged = true;
         notificationThree.textContent = '';
-        // console.log(wordParametersObj);
-        // for (const key in wordParametersObj) {
-        //     console.log(key, ' ', key['index']);
-        // }
-
-        //letters in the entered word
-        //each letter searched for in the random word
-        for (const letter of word) {
-            const firstIndexInRandom = random.indexOf(letter);
-            const firstIndexInUserInput = word.indexOf(letter);
-            if (firstIndexInRandom !== -1 && firstIndexInUserInput !== -1) {
-                const nextIndexInRandom = random.indexOf(letter, firstIndexInRandom + 1);
+        if (word === random) {
+            for (let index = 0; index < 5; index++) {
+                rows[rowNumber].children[index].style.backgroundColor = 'green';
+                for (const button of allButtons) {
+                    if (button.textContent.toUpperCase() === rows[rowNumber].children[index].textContent) {
+                        changeButtonColor(button, 'green');
+                    }
+                }
+            }
+            lettersFound += 5;
+        }
+        else {
+            for (const letter of word) {
+                const firstIndexInRandom = random.indexOf(letter);
+                const firstIndexInUserInput = word.indexOf(letter);
+                let nextIndexInRandom = random.indexOf(letter, firstIndexInRandom + 1);
                 const nextIndexInUserInput = word.indexOf(letter, firstIndexInUserInput + 1);
-                if (nextIndexInRandom !== -1) {
-                    if (nextIndexInRandom === firstIndexInUserInput) {
-                        rows[rowNumber].children[firstIndexInUserInput].style.backgroundColor = 'green';
-                        lettersFound++;
+                if (firstIndexInRandom !== -1 && firstIndexInUserInput !== -1) {
+                    if (nextIndexInRandom !== -1) {
+                        if (nextIndexInRandom === firstIndexInUserInput) {
+                            if (rows[rowNumber].children[firstIndexInUserInput].style.backgroundColor !== 'green') {
+                                rows[rowNumber].children[firstIndexInUserInput].style.backgroundColor = 'green';
+                                rows[rowNumber].children[firstIndexInUserInput].style.color = 'white';
+                                lettersFound++;
+                            }
+                            for (const button of allButtons) {
+                                if (button.textContent.toUpperCase() === rows[rowNumber].children[firstIndexInUserInput].textContent) {
+                                    changeButtonColor(button, 'green');
+                                }
+                            }
+                        }
+                        if (nextIndexInRandom === nextIndexInUserInput) {
+                            if (rows[rowNumber].children[nextIndexInUserInput].style.backgroundColor !== 'green') {
+                                rows[rowNumber].children[nextIndexInUserInput].style.backgroundColor = 'green';
+                                rows[rowNumber].children[nextIndexInUserInput].style.color = 'white';
+                                lettersFound++;
+                            }
+                            for (const button of allButtons) {
+                                if (button.textContent.toUpperCase() === rows[rowNumber].children[firstIndexInUserInput].textContent) {
+                                    changeButtonColor(button, 'green');
+                                }
+                            }
+                        }
+                        else {
+                            if (nextIndexInUserInput !== -1) {
+                                rows[rowNumber].children[nextIndexInUserInput].style.backgroundColor = 'yellow';
+                                rows[rowNumber].children[nextIndexInUserInput].style.color = 'black';
+                                for (const button of allButtons) {
+                                    if (button.textContent.toUpperCase() === rows[rowNumber].children[firstIndexInUserInput].textContent) {
+                                        changeButtonColor(button, 'grey');
+                                    }
+                                }
+                            }
+                        }
                     }
-                    if (nextIndexInRandom === nextIndexInUserInput) {
-                        rows[rowNumber].children[nextIndexInUserInput].style.backgroundColor = 'green';
-                        lettersFound++;
+                    if (firstIndexInRandom === nextIndexInUserInput) {
+                        if (rows[rowNumber].children[nextIndexInUserInput].style.backgroundColor !== 'green') {
+                            rows[rowNumber].children[nextIndexInUserInput].style.backgroundColor = 'green';
+                            rows[rowNumber].children[nextIndexInUserInput].style.color = 'white';
+                            lettersFound++;
+                        }
+                        for (const button of allButtons) {
+                            if (button.textContent.toUpperCase() === rows[rowNumber].children[firstIndexInUserInput].textContent) {
+                                changeButtonColor(button, 'green');
+                            }
+                        }
+                    }
+                    if (firstIndexInRandom === firstIndexInUserInput && firstIndexInRandom !== -1) {
+                        if (rows[rowNumber].children[firstIndexInUserInput].style.backgroundColor !== 'green') {
+                            rows[rowNumber].children[firstIndexInUserInput].style.backgroundColor = 'green';
+                            rows[rowNumber].children[firstIndexInUserInput].style.color = 'white';
+                            lettersFound++;
+                        }
+                        for (const button of allButtons) {
+                            if (button.textContent.toUpperCase() === rows[rowNumber].children[firstIndexInUserInput].textContent) {
+                                changeButtonColor(button, 'green');
+                            }
+                        }
+                    }
+                    if (nextIndexInRandom !== nextIndexInUserInput && nextIndexInRandom !== -1) {
+                        if (rows[rowNumber].children[firstIndexInUserInput].style.backgroundColor !== 'green') {
+                            rows[rowNumber].children[firstIndexInUserInput].style.backgroundColor = 'yellow';
+                            rows[rowNumber].children[firstIndexInUserInput].style.color = 'black';
+                            for (const button of allButtons) {
+                                if (button.textContent.toUpperCase() === rows[rowNumber].children[firstIndexInUserInput].textContent) {
+                                    changeButtonColor(button, 'yellow');
+                                }
+                            }
+                        }
+                    }
+                    if (firstIndexInRandom !== firstIndexInUserInput && firstIndexInRandom !== -1) {
+                        if (rows[rowNumber].children[firstIndexInUserInput].style.backgroundColor !== 'green') {
+                            rows[rowNumber].children[firstIndexInUserInput].style.backgroundColor = 'yellow';
+                            rows[rowNumber].children[firstIndexInUserInput].style.color = 'black';
+                            for (const button of allButtons) {
+                                if (button.textContent.toUpperCase() === rows[rowNumber].children[firstIndexInUserInput].textContent) {
+                                    changeButtonColor(button, 'yellow');
+                                }
+                            }
+                        }
                     }
                 }
-                if (firstIndexInRandom === nextIndexInUserInput) {
-                    rows[rowNumber].children[nextIndexInUserInput].style.backgroundColor = 'green';
-                    lettersFound++;
-                }
-                if (firstIndexInRandom === firstIndexInUserInput && firstIndexInRandom !== -1) {
-                    rows[rowNumber].children[firstIndexInUserInput].style.backgroundColor = 'green';
-                    lettersFound++;
-                }
-                //add an or to this if to check if nextindexinuser equals firstindexinrandom                }
-                if (nextIndexInRandom !== nextIndexInUserInput && nextIndexInRandom !== -1) {
-                    if (rows[rowNumber].children[firstIndexInUserInput].style.backgroundColor !== 'green') {
-                        rows[rowNumber].children[firstIndexInUserInput].style.backgroundColor = 'yellow';
+                else {
+                    rows[rowNumber].children[firstIndexInUserInput].style.backgroundColor = 'grey';
+                    rows[rowNumber].children[firstIndexInUserInput].style.color = 'white';
+                    if (nextIndexInUserInput !== -1) {
+                        rows[rowNumber].children[nextIndexInUserInput].style.backgroundColor = 'grey';
+                        rows[rowNumber].children[nextIndexInUserInput].style.color = 'white';
                     }
-                }
-                if (firstIndexInRandom !== firstIndexInUserInput && firstIndexInRandom !== -1) {
-                    if (rows[rowNumber].children[firstIndexInUserInput].style.backgroundColor !== 'green') {
-                        rows[rowNumber].children[firstIndexInUserInput].style.backgroundColor = 'yellow';
+                    for (const button of allButtons) {
+                        if (button.textContent.toUpperCase() === rows[rowNumber].children[firstIndexInUserInput].textContent) {
+                            changeButtonColor(button, 'grey');
+                        }
                     }
                 }
             }
+        }
+        if (lettersFound >= 5) {
+            setTimeout(function () {
+                mainHeading.style.opacity = '0';
+                mainHeading.style.transitionDuration = '1s';
+                mainHeading.style.transitionTimingFunction = 'ease-in';
+            }, 1000);
+            setTimeout(function () {
+                mainHeading.textContent = 'You have won $1M! In Monopoly Money!';
+                mainHeading.style.color = 'green';
+                mainHeading.style.opacity = '1';
+                mainHeading.style.transitionDuration = '1s';
+                mainHeading.style.transitionTimingFunction = 'ease-in';
+                document.body.style.backgroundImage = 'url(https://static.vecteezy.com/system/resources/previews/001/948/790/non_2x/fireworks-design-on-black-background-illustration-vector.jpg)';
+                scoreSection.style.fontSize = '2em';
+                // document.body.style.opacity = '0.6';
+            }, 2000);
+            gameComplete = true;
+            score += 15;
+            scoreHeading.textContent = score;
+            //bring a prompt up that says 'legend, well done'
+            //some fireworks? might need jquery which i dont know
+            //dialog box maybe?
+            //add info like, how many rows it took to get it right
+            //if first row, different message - something unique
 
-
-
-
-            // const positionInUserInput = {};
-            // const positionInRandom = {};
-            // for (const letter of word) {
-            //     for (const char of random) {
-            //         if (letter === char) {
-            //             positionInUserInput[letter] = word.indexOf(letter, positionInUserInput[letter] + 1);
-            //             positionInRandom[letter] = random.indexOf(letter, positionInRandom[letter] + 1);
-            //             if (positionInUserInput[letter] !== -1) {
-            //                 if (positionInRandom[letter] === positionInUserInput[letter]) {
-            //                     rows[rowNumber].children[positionInUserInput[letter]].style.backgroundColor = 'green';
-            //                     lettersFound++;
-            //                 }
-            //                 else {
-            //                     if (positionInRandom[letter] === -1) {
-            //                         continue;
-            //                     }
-            //                     else {
-            //                         rows[rowNumber].children[positionInUserInput[letter]].style.backgroundColor = 'yellow';
-            //                     }
-            //                 }
-            //             }
-            //         }
-            //     }
-
-            // console.log(positionInUserInput);
-
-
-
-            // let count = 0;
-            // let position = random.indexOf(letter);
-            // while (position !== -1) {
-            //     count++;
-            //     if (position === word.indexOf(letter)) {
-            //         rows[rowNumber].children[word.indexOf(letter)].style.backgroundColor = 'green';
-            //         lettersFound++;
-            //     }
-            //     else {
-            //         rows[rowNumber].children[word.indexOf(letter)].style.backgroundColor = 'yellow';
-            //     }
-            //     position = random.indexOf(letter, position + 1);
-            // }
-            // if (count >= 1) {
-            //     if (random.indexOf(letter) === word.indexOf(letter)) {
-            //         rows[rowNumber].children[word.indexOf(letter)].style.backgroundColor = 'green';
-            //         lettersFound++;
-            //     }
-            //     else {
-            //         rows[rowNumber].children[word.indexOf(letter)].style.backgroundColor = 'yellow';
-            //     }
-            // }
-
-            // if (random.indexOf(letter) === word.indexOf(letter)) {
-            //     rows[rowNumber].children[word.indexOf(letter)].style.backgroundColor = 'green';
-            //     // allBlocks[word.indexOf(letter)].style.backgroundColor = 'green';
-            //     lettersFound++;
-            // }
-            // else {
-            //     if (random.indexOf(letter) === -1) {
-            //         continue;
-            //     }
-            //     else {
-            //         console.log('here');
-            //         rows[rowNumber].children[word.indexOf(letter)].style.backgroundColor = 'yellow';
-            //         // allBlocks[nextStartingPoint + word.indexOf(letter)].style.backgroundColor = 'yellow';
-            //     }
-            // }
-            if (lettersFound >= 5) {
-                gameComplete = true;
-                //bring a prompt up that says 'legend, well done'
-                //some fireworks? might need jquery
-                //dialog box maybe?
-                //add info like, how many rows it took to get it right
-                //if first row, different message - something unique
-
-            }
-            // }
         }
     }
     else {
         found = false;
         rowChanged = false;
+        img.src = 'https://c.tenor.com/KHjfa-kjb1IAAAAC/what-have-you-done-winston.gif';
+        imageFadeIn(img);
         notificationThree.textContent = 'Word not in dictionary!';
-        // console.log('row no - ' + rowNumber);
     }
-    // blockNumber++;
+    console.log(lettersFound);
 }

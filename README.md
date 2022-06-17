@@ -16,7 +16,7 @@ An HTML-CSS-Javascript-based Wordle game that allows as many turns as players de
 
 ## How to Play
 ---
-Open <a href="https://sid-s1.github.io/Project-1/" target="_blank">this</a> link :)
+Open [this](https://sid-s1.github.io/Project-1/) link :)
 
 ## Approach
 ---

@@ -6,13 +6,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Worlde Time!</title>
     <link rel="stylesheet" href="./style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet"></head>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+</head>
 <body>
     <nav>
-        <!-- maybe add a settings wheel 
-        to change contrast -->
         <h1>Wordle Time!</h1>
     </nav>
+    <section>
+        <table>
+            <tr>
+                <th>Result</th>
+                <th>Points</th>
+            </tr>
+            <tr>
+                <td>Win at Row 1</td>
+                <td>15</td>
+            </tr>
+            <tr>
+                <td>Win at Row 2</td>
+                <td>12</td>
+            </tr>
+            <tr>
+                <td>Win at Row 3</td>
+                <td>9</td>
+            </tr>
+            <tr>
+                <td>Win at anything after Row 3 </td>
+                <td>7</td>
+            </tr>
+            <tr>
+                <td>Lose</td>
+                <td>-2</td>
+            </tr>
+            <tr>
+                <td>Borrow 2 additional rows</td>
+                <td>-10</td>
+            </tr>
+        </table>
+    </section>
     <section id='score'>
         <h3>Your score </h3>
         <h4>0</h4>
@@ -71,7 +102,7 @@
     <section id='gifs'>
         <img id='img-1' src="" alt="">
     </section>
-    <section id = 'notifications'>
+    <section id='notifications'>
         <p id='notification-1'></p>
         <p id='notification-2'></p>
         <p id='notification-3'></p>
